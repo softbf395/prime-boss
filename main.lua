@@ -57,9 +57,9 @@ local playername=owner.Name
   local p=game.Players[playername]
   local chr=p.Character
 task.spawn(function()
-    while character.Parent and pyramid1.Parent and pyramid2.Parent do
+    while true do
         -- Update player position
-        character.HumanoidRootPart.CFrame = CFrame.new(x, 100, z)
+        chr.HumanoidRootPart.CFrame = CFrame.new(x, 100, z)
 
         -- Update pyramids
         pyramid1.Position = Vector3.new(x, 100, z)
