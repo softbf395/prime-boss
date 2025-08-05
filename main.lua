@@ -69,8 +69,8 @@ task.spawn(function()
     end
 end)
   local hum=chr:FindFirstChildOfClass("Humanoid")
-  hum.Walking:Connect(function()
-      if hum.WalkDirection.Magnitude>0 then
+  hum.Running:Connect(function()
+      if hum.MoveDirection.Magnitude>0 then
         local newCF=chr.HumanoidRootPart.CFrame*CFrame.new(0,0,-1)
         x=newCF.X
         z=newCF.Z
