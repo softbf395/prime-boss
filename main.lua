@@ -1,4 +1,5 @@
 warn("Setting up values")
+local bossHP=1000
 local pyramidMeshID = "rbxassetid://4712590845"  -- mesh ID
 local version=0.1
 local isWhitelist=version<1
@@ -19,7 +20,7 @@ function say(text)
   spawn(function()
       for i=1, string.len(text) do
         h.Text=string.sub(text, 0, i)
-        wait(0.1)
+        wait()
       end
       wait(2)
       h:Destroy()
@@ -33,16 +34,59 @@ pyramid1.Material = Enum.Material.Neon
 pyramid1.Color = Color3.fromRGB(135, 67, 0)
 pyramid1.CFrame = CFrame.new(0, 100, 0)
 pyramid1.Parent = workspace
-
+pyramid1.CanCollide=false
 local mesh1 = Instance.new("SpecialMesh", pyramid1)
 mesh1.MeshType = Enum.MeshType.FileMesh
 mesh1.MeshId = pyramidMeshID
-mesh1.Scale=pyramid1.Size
-
+mesh1.Scale=Vector3.new(5,4,5)
+local ev=Instance.new("BindableEvent", game.ServerStorage)
+ev.Name="PRIMEParry"
+function initUI()
+  for _, p in ipairs(game.Players:GetPlayers()) do
+    local gui=Instance.new("ScreenGui", p.PlayerGui)
+    gui.ResetOnSpawn=false
+    local O=Instance.new("TextButton", gui)
+    O.BackgroundTransparency=0.6
+    O.Size=UDim2.new(1,0,0.2,0)
+    O.BackgroundColor3=Color3.new(1,0.6,0)
+    O.MouseButton1Down:Connect(function()
+        ev:Fire(p.Name, "orange")
+      end)
+     local B=Instance.new("TextButton", gui)
+    B.BackgroundTransparency=0.6
+    B.Size=UDim2.new(1,0,0.2,0)
+    B.BackgroundColor3=Color3.new(0,0,1)
+    B.MouseButton1Down:Connect(function()
+        ev:Fire(p.Name, "blue")
+      end)
+    local HPBG=Instance.new("Frame", gui)
+    HPBG.Name="HealthBG"
+    HPBG.Size=UDim2.new(0.7,0,0,25)
+    HPBG.AnchorPoint=Vector2.new(0.5,0)
+    HPBG.Position=UDim2.new(0.5,0,0,45)
+    HPBG.BackgroundColor3=Color3.new(0,0,0)
+    local HP=Instance.new("Frame", HPBG)
+    HP.Size=UDim2.new(1,0,1,0)
+    local bossName=Instance.new("TextLabel", HPBG)
+    bossName.BackgroundTransparency=1
+    bossName.Size=UDim2.new(1,0,1,0)
+    bossName.TextScaled=true
+    bossName.Text="PRIME - HP 1000/1000"
+    spawn(function()
+        while wait() do
+          bossName.Text="PRIME - HP "..bossHP.."/1000"
+          HP.Size=UDim2.new(bossHP/1000,0,1,0)
+        end
+      end)
+  end
+end
 local pyramid2 = pyramid1:Clone()
 pyramid2.Color = Color3.new(0, 0, 1)
+pyramid2.CanCollide=true
 pyramid2.CFrame = CFrame.new(0, 89, 0) * CFrame.Angles(math.rad(180), 0, 0)
 pyramid2.Parent = workspace
+say("[SERVER]: Boss damage can only be done with a parry btw")
+wait(4)
 local DB=false --debounces!
 function _tool(bp, name, callback)
   local tool=Instance.new("Tool", bp)
@@ -55,6 +99,15 @@ function _tool(bp, name, callback)
       end
     end)
 end
+function doDmg(hum,col,dmgPercent)
+  if hum:GetAttribute("Parry")~=col then
+    hum.Health-=hum.MaxHealth%dmgPercent
+  else
+    bossHP-=dmgPercent*2
+  end
+end
+ev.Event:Connect(pname, col)
+  game.Players[pname].Character.Humanoid:SetAttribute("Parry", col)
 local x,z=0,0
 --return function(playername)
 local playername=owner.Name
@@ -71,6 +124,7 @@ local playername=owner.Name
 warn("Setting up prime..")
 task.spawn(function()
     while true do
+      chr.HumanoidRootPart.Anchored=true
         -- Update player position
         chr.HumanoidRootPart.CFrame = CFrame.new(x, 80, z)
 
@@ -89,8 +143,16 @@ end)
         z=newCF.Z
       end
     end)
+initUI()
 say("[Prime]: So, uh, click on the top of the screen to reflect orange attacks. Click on the bottom to reflect blue attacks.")
-local bossHP=1000
+_tool(p.Backpack, "Orb Barrage", function()
+    local IsOrange=math.random(0,1)==1
+    say("TESTING MOVE. Parry: "..(IsOrange and "Orange") or "Blue")
+    wait(4)
+    for _, plr in ipairs(game.Players:GetPlayers()) do
+      doDmg(plr.Character.Humanoid, IsOrange and "orange" or "blue", 2)
+    end
+  end)
 hum.Died:Connect(function()
     pyramid1:Destroy()
     pyramid2:Destroy()
