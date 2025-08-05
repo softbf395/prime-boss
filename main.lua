@@ -56,6 +56,7 @@ local playername=owner.Name
   warn("You have Whitelist! or version >=1, it is recommended to use shiftlock.")
   local p=game.Players[playername]
   local chr=p.Character
+warn("Setting up prime..")
 task.spawn(function()
     while true do
         -- Update player position
