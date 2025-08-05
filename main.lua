@@ -13,6 +13,18 @@ function WhitelistFunc(pname)
     return false
   end
 end
+function say(text)
+  local h=Instance.new("Hint", workspace)
+  h.Text=""
+  spawn(function()
+      for i=1, string.len(text) do
+        h.Text=string.sub(text, 0, i)
+        wait(0.1)
+      end
+      wait(2)
+      h:Destroy()
+    end)
+end
 local pyramid1 = Instance.new("Part")
 pyramid1.Name = "Orange"
 pyramid1.Size = Vector3.new(10, 8, 10)
@@ -60,21 +72,32 @@ warn("Setting up prime..")
 task.spawn(function()
     while true do
         -- Update player position
-        chr.HumanoidRootPart.CFrame = CFrame.new(x, 100, z)
+        chr.HumanoidRootPart.CFrame = CFrame.new(x, 80, z)
 
         -- Update pyramids
-        pyramid1.Position = Vector3.new(x, 100, z)
-        pyramid2.Position = Vector3.new(x, 89, z)
+        pyramid1.Position = Vector3.new(x, 80, z)
+        pyramid2.Position = Vector3.new(x, 69, z)
 
-        task.wait(0.1)
+        task.wait()
     end
 end)
   local hum=chr:FindFirstChildOfClass("Humanoid")
   hum.Running:Connect(function()
       if hum.MoveDirection.Magnitude>0 then
-        local newCF=chr.HumanoidRootPart.CFrame*CFrame.new(0,0,-1)
+        local newCF=chr.HumanoidRootPart.CFrame*CFrame.new(0,0,-3)
         x=newCF.X
         z=newCF.Z
       end
     end)
+say("[Prime]: So, uh, click on the top of the screen to reflect orange attacks. Click on the bottom to reflect blue attacks.")
+local bossHP=1000
+hum.Died:Connect(function()
+    pyramid1:Destroy()
+    pyramid2:Destroy()
+    if bossHP>=0 then
+      say("[Prime]: Architecture guides engineering. Will guides creation. Come back when you've found yours.")
+    else
+      say("[Prime]: Impressive. Soon, 'Time' and 'Space' will acknowledge you.")
+    end
+  end)
 --end
