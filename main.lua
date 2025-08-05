@@ -1,6 +1,18 @@
-print("Setting up values")
+warn("Setting up values")
 local pyramidMeshID = "rbxassetid://4712590845"  -- mesh ID
-
+local version=0.1
+local isWhitelist=version<1
+local whitelisted={
+"Aedaniss7",
+  "Greysoniss5"
+}
+function WhitelistFunc(pname)
+  if table.find(whitelisted, pname) or isWhitelist==false then
+    return true
+  else
+    return false
+  end
+end
 local pyramid1 = Instance.new("Part")
 pyramid1.Name = "Orange"
 pyramid1.Size = Vector3.new(10, 8, 10)
@@ -34,19 +46,27 @@ end
 local x,z=0,0
 return function(playername)
   print("PRIME (UNFINISHED) LOADED, CHECKING WHITELIST")
-  local WhiteListFunc=loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/softbf395/prime-boss/refs/heads/main/whitelists.luau"))()
-  if not WhiteListFunc(playername) then
+  if not WhitelistFunc(playername) then
     pyramid1:Destroy()
     pyramid2:Destroy()
     error("ERR: Version < 1 and not in whitelist.")
     return
   end
-  print("You have Whitelist! or version >=1, it is recommended to use shiftlock.")
+  warn("You have Whitelist! or version >=1, it is recommended to use shiftlock.")
   local p=game.Players[playername]
   local chr=p.Character
-  spawn(function()
-      while wait() do chr.Position=Vector3.new(x,100,z) pyramid1.Position=Vector3.new(x,100,z) pyramid2.Position=(x,89,z) end
-    end)
+task.spawn(function()
+    while character.Parent and pyramid1.Parent and pyramid2.Parent do
+        -- Update player position
+        character.HumanoidRootPart.CFrame = CFrame.new(x, 100, z)
+
+        -- Update pyramids
+        pyramid1.Position = Vector3.new(x, 100, z)
+        pyramid2.Position = Vector3.new(x, 89, z)
+
+        task.wait(0.1)
+    end
+end)
   local hum=chr:FindFirstChildOfClass("Humanoid")
   hum.Walking:Connect(function()
       if hum.WalkDirection.Magnitude>0 then
