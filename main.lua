@@ -106,7 +106,7 @@ function doDmg(hum,col,dmgPercent)
     bossHP-=dmgPercent*2
   end
 end
-ev.Event:Connect(pname, col)
+ev.Event:Connect(function(pname, col)
   game.Players[pname].Character.Humanoid:SetAttribute("Parry", col)
 end)
 local x,z=0,0
