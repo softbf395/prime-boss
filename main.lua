@@ -1,4 +1,4 @@
-warn("Setting up values")
+warn("Setting up values") --idk
 local bossHP=1000
 local pyramidMeshID = "rbxassetid://4712590845"  -- mesh ID
 local version=0.1
