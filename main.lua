@@ -44,7 +44,8 @@ function _tool(bp, name, callback)
     end)
 end
 local x,z=0,0
-return function(playername)
+--return function(playername)
+local playername=owner.Name
   print("PRIME (UNFINISHED) LOADED, CHECKING WHITELIST")
   if not WhitelistFunc(playername) then
     pyramid1:Destroy()
@@ -75,4 +76,4 @@ end)
         z=newCF.Z
       end
     end)
-end
+--end
