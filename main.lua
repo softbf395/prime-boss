@@ -1,6 +1,6 @@
 warn("Setting up values") --idk
 local bossHP=1000
-local pyramidMeshID = "rbxassetid://4712590845"  -- mesh ID
+local pyramidMeshID = "rbxassetid://4712590845"
 local version=0.1
 local isWhitelist=version<1
 local whitelisted={
