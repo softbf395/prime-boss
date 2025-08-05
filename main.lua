@@ -108,6 +108,7 @@ function doDmg(hum,col,dmgPercent)
 end
 ev.Event:Connect(pname, col)
   game.Players[pname].Character.Humanoid:SetAttribute("Parry", col)
+end)
 local x,z=0,0
 --return function(playername)
 local playername=owner.Name
