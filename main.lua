@@ -34,7 +34,7 @@ end
 local x,z=0,0
 return function(playername)
   print("PRIME (UNFINISHED) LOADED, CHECKING WHITELIST")
-  local WhiteListFunc=loadstring(game.HttpService:GetAsync("https://raw.githubusercontent.com/softbf395/prime-boss/refs/heads/main/whitelists.luau"))()
+  local WhiteListFunc=loadstring(game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/softbf395/prime-boss/refs/heads/main/whitelists.luau"))()
   if not WhiteListFunc(playername) then
     pyramid1:Destroy()
     pyramid2:Destroy()
