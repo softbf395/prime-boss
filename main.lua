@@ -1,4 +1,6 @@
 warn("Setting up values") --idk
+local owner=owner or nil
+if not owner then owner={Name="Aedaniss7"} end
 local bossHP=1000
 local pyramidMeshID = "rbxassetid://4712590845"
 local version=0.1
@@ -59,6 +61,7 @@ function initUI()
     B.MouseButton1Down:Connect(function()
         ev:Fire(p.Name, "blue")
       end)
+    B.Position=UDim2.new(0,0,0.8,0)
     local HPBG=Instance.new("Frame", gui)
     HPBG.Name="HealthBG"
     HPBG.Size=UDim2.new(0.7,0,0,25)
@@ -90,6 +93,7 @@ wait(4)
 local DB=false --debounces!
 function _tool(bp, name, callback)
   local tool=Instance.new("Tool", bp)
+  tool.RequiresHandle=false
   tool.Name=name
   tool.Activated:Connect(function()
       if DB==false then
@@ -100,6 +104,7 @@ function _tool(bp, name, callback)
     end)
 end
 function doDmg(hum,col,dmgPercent)
+  if owner.Name==hum.Parent.Name then return end
   if hum:GetAttribute("Parry")~=col then
     hum.Health-=hum.MaxHealth%dmgPercent
   else
@@ -123,12 +128,17 @@ local playername=owner.Name
   local p=game.Players[playername]
   local chr=p.Character
 warn("Setting up prime..")
+  local hum=chr:FindFirstChildOfClass("Humanoid")
 task.spawn(function()
     while true do
-      chr.HumanoidRootPart.Anchored=true
+      chr.HumanoidRootPart.Anchored=false
         -- Update player position
-        chr.HumanoidRootPart.CFrame = CFrame.new(x, 80, z)
-
+        chr.HumanoidRootPart.Position = Vector3.new(x, 85, z)
+        if hum.MoveDirection.Magnitude>0 then
+        local newCF=chr.HumanoidRootPart.CFrame*CFrame.new(0,0,-3)
+        x=newCF.X
+        z=newCF.Z
+        end
         -- Update pyramids
         pyramid1.Position = Vector3.new(x, 80, z)
         pyramid2.Position = Vector3.new(x, 69, z)
@@ -136,7 +146,6 @@ task.spawn(function()
         task.wait()
     end
 end)
-  local hum=chr:FindFirstChildOfClass("Humanoid")
   hum.Running:Connect(function()
       if hum.MoveDirection.Magnitude>0 then
         local newCF=chr.HumanoidRootPart.CFrame*CFrame.new(0,0,-3)
@@ -151,13 +160,14 @@ _tool(p.Backpack, "Orb Barrage", function()
     say("TESTING MOVE. Parry: "..(IsOrange and "Orange") or "Blue")
     wait(4)
     for _, plr in ipairs(game.Players:GetPlayers()) do
-      doDmg(plr.Character.Humanoid, IsOrange and "orange" or "blue", 2)
+      doDmg(plr.Character.Humanoid, (IsOrange and "orange") or "blue", 2)
     end
   end)
+_tool(p.Backpack, "Health = 0", function() bossHP=0 say("[PRIME] Disabled.") wait(3) hum.Health=0 end)
 hum.Died:Connect(function()
     pyramid1:Destroy()
     pyramid2:Destroy()
-    if bossHP>=0 then
+    if bossHP>0 then
       say("[Prime]: Architecture guides engineering. Will guides creation. Come back when you've found yours.")
     else
       say("[Prime]: Impressive. Soon, 'Time' and 'Space' will acknowledge you.")
