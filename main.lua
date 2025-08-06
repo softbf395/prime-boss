@@ -3,7 +3,7 @@ local owner=owner or nil
 if not owner then owner={Name="Aedaniss7"} end
 local bossHP=1000
 local pyramidMeshID = "rbxassetid://4712590845"
-local version=0.1
+local version=0.1 --version
 local isWhitelist=version<1
 --whitelist
 local whitelisted={
