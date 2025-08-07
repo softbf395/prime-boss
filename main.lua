@@ -9,7 +9,6 @@ local isWhitelist=version<1
 local whitelisted={
 "Aedaniss7", --me
   "Greysoniss5", --my brother
-  "leonardomigueltest" --friend
 }
 function WhitelistFunc(pname)
   if table.find(whitelisted, pname) or isWhitelist==false then
